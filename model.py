@@ -1,3 +1,5 @@
+import random
+
 from scipy.io import arff
 import numpy as np
 import matplotlib.pyplot as plt
@@ -78,23 +80,35 @@ class Chart:
             axes_3d.yaxis.set_rotate_label(True)
         plt.show()
 
+    @staticmethod
+    def two_dimensional_random(attribute_1, attribute_2):
+        plt.scatter(attribute_1, attribute_2, c=[Chart.GREEN, Chart.RED])
+        plt.title("Random")
+        plt.show()
+        pass
 
-class FileLoader:
+    @staticmethod
+    def three_dimensional_random(attribute_1, attribute_2, attribute_3, y):
+        new_y = []
+        uq = np.unique(y)
+        for i, iv in enumerate(y):
+            idx = np.where(uq == iv)
+            new_y.append(idx[0][0])
+        y = np.array(new_y)
+        figure = plt.figure()
+        axes_3d = Axes3D(figure)
+        axes_3d.scatter(attribute_1, attribute_2, attribute_3, c=y, s=4)
+        plt.title("Random")
+        plt.show()
+        pass
+
+
+class DataLoader:
     def __init__(self):
         pass
 
     @staticmethod
     def load_data(file_path):
-        # data, meta = arff.loadarff(file_path)
-        # # data = data_set['data']
-        # probe_length = len(data[0])
-        # classes = []
-        #
-        # for vector in data:
-        #     classes.append(vector[probe_length - 1])
-        #     del vector[probe_length - 1]
-        # return data, classes
-
         data, meta = arff.loadarff(file_path)
         x_data = []
         y_data = []
@@ -106,3 +120,19 @@ class FileLoader:
                 else:
                     x_data[w].append(data[w][k])
         return x_data, y_data
+
+    @staticmethod
+    def get_random_attributes(data):
+        attributes_amount = len(data[0]) - 1
+        random_number = np.zeros(3)
+        while True:
+            random_number[0] = random.randint(0, attributes_amount)
+            random_number[1] = random.randint(0, attributes_amount)
+            random_number[2] = random.randint(0, attributes_amount)
+            if random_number[1] != random_number[2] \
+                    and random_number[2] != random_number[0] \
+                    and random_number[1] != random_number[0]:
+                break
+        data = np.array(data)
+        print(data)
+        return data[:, int(random_number[0])], data[:, int(random_number[1])], data[:, int(random_number[2])]
