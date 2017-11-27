@@ -1,4 +1,4 @@
-import arff
+from scipy.io import arff
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -40,8 +40,8 @@ class Chart:
         pass
 
     @staticmethod
-    def two_dimensional(pca_object, ratio):
-        for i in range(int(len(pca_object.result) * ratio)):
+    def two_dimensional(pca_object):
+        for i in range(len(pca_object.result)):
             if pca_object.result[i] == list(pca_object.classes)[0]:
                 plt.scatter(pca_object.pca[pca_object.priority[0]][i], pca_object.pca[pca_object.priority[1]][i],
                             c=Chart.BLUE, s=4)
@@ -57,10 +57,10 @@ class Chart:
         plt.show()
 
     @staticmethod
-    def three_dimensional(pca_object, ratio):
+    def three_dimensional(pca_object):
         figure = plt.figure()
         axes_3d = Axes3D(figure)
-        for i in range(int(len(pca_object.result) * ratio)):
+        for i in range(len(pca_object.result)):
             if pca_object.result[i] == list(pca_object.classes)[0]:
                 axes_3d.scatter(pca_object.pca[pca_object.priority[0]][i], pca_object.pca[pca_object.priority[1]][i],
                                 pca_object.pca[pca_object.priority[2]][i], c=Chart.BLUE, s=4)
@@ -85,12 +85,24 @@ class FileLoader:
 
     @staticmethod
     def load_data(file_path):
-        data_set = arff.load(open(file_path, 'rb'))
-        data = data_set['data']
-        probe_length = len(data[0])
-        classes = []
+        # data, meta = arff.loadarff(file_path)
+        # # data = data_set['data']
+        # probe_length = len(data[0])
+        # classes = []
+        #
+        # for vector in data:
+        #     classes.append(vector[probe_length - 1])
+        #     del vector[probe_length - 1]
+        # return data, classes
 
-        for vector in data:
-            classes.append(vector[probe_length - 1])
-            del vector[probe_length - 1]
-        return data, classes
+        data, meta = arff.loadarff(file_path)
+        x_data = []
+        y_data = []
+        for w in range(len(data)):
+            x_data.append([])
+            for k in range(len(data[0])):
+                if k == (len(data[0]) - 1):
+                    y_data.append(data[w][k])
+                else:
+                    x_data[w].append(data[w][k])
+        return x_data, y_data
