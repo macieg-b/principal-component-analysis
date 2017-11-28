@@ -30,7 +30,7 @@ class PCA:
                 percentage_eigenvalue[i / eigenvalues_sum] = sorted_eigenvalues[i]
 
         self.pca = np.dot(data_transposed.transpose(), eigenvectors).transpose()
-        return percentage_eigenvalue
+        return sorted_eigenvalues, percentage_eigenvalue
 
 
 class Chart:
