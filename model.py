@@ -134,5 +134,4 @@ class DataLoader:
                     and random_number[1] != random_number[0]:
                 break
         data = np.array(data)
-        print(data)
         return data[:, int(random_number[0])], data[:, int(random_number[1])], data[:, int(random_number[2])]
